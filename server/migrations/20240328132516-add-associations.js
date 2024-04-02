@@ -3,15 +3,27 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.addColumn("Products", "category_id", {
-      type: Sequelize.BIGINT,
-      references: {
-        model: "Categories",
-        key: "id",
-      },
-      onUpdate: "CASCADE",
-      onDelete: "SET NULL",
-    });
+    await queryInterface
+      .addColumn("Products", "category_id", {
+        type: Sequelize.BIGINT,
+        references: {
+          model: "Categories",
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "SET NULL",
+      })
+      .then(() =>
+        queryInterface.addColumn("Products", "brand_id", {
+          type: Sequelize.BIGINT,
+          references: {
+            model: "Brands",
+            key: "id",
+          },
+          onUpdate: "CASCADE",
+          onDelete: "SET NULL",
+        })
+      );
 
     await queryInterface
       .addColumn("Orders", "user_id", {
@@ -34,17 +46,6 @@ module.exports = {
           onDelete: "SET NULL",
         });
       });
-
-    await queryInterface.addColumn("Brands", "product_id", {
-      type: Sequelize.BIGINT,
-      references: {
-        model: "Products",
-        key: "id",
-      },
-      onUpdate: "CASCADE",
-      onDelete: "SET NULL",
-    });
-
     await queryInterface.addColumn("Cart", "product_id", {
       type: Sequelize.BIGINT,
       references: {
@@ -86,15 +87,16 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.removeColumn("Products", "category_id");
-    await queryInterface.removeColumn("Orders", "user_id").then(() => {
-      return queryInterface.removeColumn("Orders", "product_id");
-    });
-    await queryInterface.removeColumn("Brands", "product_id");
+    await queryInterface
+      .removeColumn("Products", "category_id")
+      .then(() => queryInterface.removeColumn("Products", "brand_id"));
+    await queryInterface
+      .removeColumn("Orders", "user_id")
+      .then(() => queryInterface.removeColumn("Orders", "product_id"));
     await queryInterface.removeColumn("Cart", "product_id");
     await queryInterface.removeColumn("Wishlist", "product_id");
-    await queryInterface.removeColumn("Reviews", "user_id").then(() => {
-      return queryInterface.removeColumn("Reviews", "product_id");
-    });
+    await queryInterface
+      .removeColumn("Reviews", "user_id")
+      .then(() => queryInterface.removeColumn("Reviews", "product_id"));
   },
 };

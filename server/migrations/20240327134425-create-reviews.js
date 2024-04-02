@@ -10,15 +10,11 @@ module.exports = {
         type: Sequelize.INTEGER,
       },
       text: {
-        type: Sequelize.STRING,
+        type: Sequelize.TEXT,
       },
       rating: {
         defaultValue: 0,
         type: Sequelize.INTEGER,
-      },
-      toket: {
-        allowNull: false,
-        type: Sequelize.STRING,
       },
       createdAt: {
         allowNull: false,

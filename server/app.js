@@ -5,7 +5,7 @@ const sequelize = require("./db");
 const express = require("express");
 const cors = require("cors");
 
-// const router = require();
+const router = require("./routes/router");
 
 async function start() {
   try {
@@ -16,6 +16,7 @@ async function start() {
     app.use(cors());
     app.use(express.json());
     app.use(express.urlencoded());
+    app.use( router);
     app.listen(6000, () => {
       console.log("Server was started");
     });
@@ -25,3 +26,5 @@ async function start() {
     console.error("Unable to connect to the database:", error);
   }
 }
+
+start();
